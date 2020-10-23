@@ -1,12 +1,19 @@
 # Content
 
 # Preparation
+Arduino Nano is the actual platform.
 
-Arduino Nano is the actual platform. To sucessfully use arduino nano on masterboard you need
-to flash optiboot bootloader to it. There is script which uploads optiboot to arduino nano using usbtiny in code/bootloader.
+# Flashing bootloader
+To sucessfully use arduino nano on masterboard you need to flash optiboot bootloader to it.
+There is bat script which uploads optiboot to arduino nano using usbtiny in [code/bootloader](code/bootloader).
 It requires usbtinyisp board connected to arduino nano and arduino ide to be installed. Flash take around 3 seconds.
+[Here](code/README.md) are more details how to flash bootloader with optiboot.
 
-When done, connect arduino nano using usb cable to pc and use XLoader utility to flash required firmware.
+
+# Flashing firmware
+On Windows use XLoader (http://xloader.russemotto.com/), on linux use avrdude. Download and flash right firmware depending on board you are flashing.
+
+Connect arduino nano using usb cable to pc and use XLoader utility to flash required firmware.
 Use input or outputmaster_firmware_nano328.hex files, setup xloader as following:
 - hex file: specify firmware file
 - device: Uno (atmega 328)
@@ -15,33 +22,31 @@ Use input or outputmaster_firmware_nano328.hex files, setup xloader as following
 
 Leds will flash during update.
 
-To check nano was flashed succesfully, close xloader, then start arduino ide, choose board "Adruino/Genuino UNO", specify port
-and start serial monitor at 9600 baud. If you will see messages such as:
+# Check if firmware was flashed successfully
+To check that nano was flashed succesfully, close xloader, then start arduino ide, choose board "Adruino/Genuino UNO", specify port
+and start serial monitor at 9600 baud.
+Alternatively on Linux you can use e.g minicom to display messages from serial console of arduino:
+```
+sudo minicom -D /dev/ttyUSB0 -b 9600
+```
 
+If you will see messages such as:
+```
 Master board id: im0
 Assigned address: 192.168.88.120
 No ping - connection lost?
 ...
-
+```
 you have flashed sucessfully.
-   
- 
 
 
-TODO
+[TODO](TODO)
 
-# How to connect
-
+# How to interconnect boards
 Connect input slave boards to input master board using XH cable. Same situation for output board
 
 
-# Flashing firmware
-
-On Windows use XLoader (http://xloader.russemotto.com/), on linux use avrdude. Download and flash right firmware depending on board you are flashing.
-
-
-# Loxone
-
+# Integration with Loxone
 At first you need to create new virtual output, name "Relayduino output BUS", address /dev/udp/255.255.255.255/6666, separator ";". Then create new output command named "ping", command for ON: "ping"
 and feed it with pulse generator configured 1 on 4 off seconds. Boards use this ping to detect network failures and this command is mandatory. When output board lost this command
 for a while, it turns off all relays.
